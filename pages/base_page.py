@@ -1,12 +1,16 @@
+from selenium.webdriver.common.by import By
+
+
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
 
-    def fill_field(self):
+    def fill_field(self, xpath, value):
         """Send data into the field"""
-        # - Find element
-        login_field = driver.find_element(by=By.XPATH, value='.//input[@placeholder="Username"]')
-        # - Clear field
-        login_field.clear()
-        # - Fill field
-        login_field.send_keys("Irina")
+        field = self.driver.find_element(by=By.XPATH, value=xpath)
+        field.clear()
+        field.send_keys(value)
+
+    def click(self, xpath):
+        """Find and click the element"""
+        self.driver.find_element(by=By.XPATH, value=xpath).click()
