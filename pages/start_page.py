@@ -31,7 +31,7 @@ class StartPage(BasePage):
         """Sing up the user using provided values"""
         self.fill_field(xpath=self.constants.SING_UP_USERNAME_XPATH, value=username)
         self.fill_field(xpath=self.constants.SING_UP_EMAIL_XPATH, value=email)
-        self.fill_field(xpath=self.constants.SgiING_UP_PASSWORD_XPATH, value=password)
+        self.fill_field(xpath=self.constants.SING_UP_PASSWORD_XPATH, value=password)
         # self.click_sign_up_and_verify()
 
     @wait_until_ok(timeout=10, period=1)
