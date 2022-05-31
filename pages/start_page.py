@@ -29,13 +29,13 @@ class StartPage(BasePage):
         self.fill_field(xpath=self.constants.SING_UP_EMAIL_XPATH, value=email)
         self.fill_field(xpath=self.constants.SING_UP_PASSWORD_XPATH, value=password)
         sleep(2)
-        self.click(xpath=self.constants.SING_IN_BUTTON_XPATH)
+        self.click(xpath=self.constants.SING_UP_BUTTON_XPATH)
 
     def verify_success_sign_up(self, username):
         """Verify success message after sing up"""
         success_message = self.driver.find_element(by=By.XPATH, value=self.constants.SUCCESS_MESSAGE_XPATH)
         assert success_message.text == self.constants.SUCCESS_MESSAGE_TEXT.format(
-            username.lower()), 'User is not registered'
+            text=username.lower()), 'User is not registered'
 
     def verify_error_message_sing_up(self):
         """Verify error message after sing up with existing email"""

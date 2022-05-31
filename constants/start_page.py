@@ -7,13 +7,13 @@ class StartPageConstants:
     SING_IN_ERROR_MESSAGE_TEXT = 'Invalid username / pasword'
 
     # SING UP
-    SING_UP_USERNAME_XPATH = 'username-register'
-    SING_UP_EMAIL_XPATH = 'email-register'
-    SING_UP_PASSWORD_XPATH = 'password-register'
+    SING_UP_USERNAME_XPATH = '//*[@id="username-register"]'
+    SING_UP_EMAIL_XPATH = '//*[@id="email-register"]'
+    SING_UP_PASSWORD_XPATH = '//*[@id="password-register"]'
     SING_UP_BUTTON_XPATH = '//*[@id="registration-form"]/button'
     SING_UP_EMAIL_ERROR_MESSAGE_XPATH = '//*[@id="registration-form"]/div[2]/div'
     SING_UP_EMAIL_ERROR_MESSAGE_TEXT = ['That email is already being used.', 'You must provide a valid email address.']
 
     # Profile page
     SUCCESS_MESSAGE_XPATH = '/html/body/div[2]/div/h2'
-    SUCCESS_MESSAGE_TEXT = 'Hello irina{text}, your feed is empty.'
+    SUCCESS_MESSAGE_TEXT = 'Hello {text}, your feed is empty.'
