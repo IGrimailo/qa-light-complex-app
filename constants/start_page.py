@@ -12,7 +12,8 @@ class StartPageConstants:
     SING_UP_PASSWORD_XPATH = 'password-register'
     SING_UP_BUTTON_XPATH = '//*[@id="registration-form"]/button'
     SING_UP_EMAIL_ERROR_MESSAGE_XPATH = '//*[@id="registration-form"]/div[2]/div'
+    SING_UP_EMAIL_ERROR_MESSAGE_TEXT = ['That email is already being used.', 'You must provide a valid email address.']
 
     # Profile page
     SUCCESS_MESSAGE_XPATH = '/html/body/div[2]/div/h2'
-    SUCCESS_MESSAGE_TEXT = 'Hello irina{self.current_datetime}, your feed is empty.'
+    SUCCESS_MESSAGE_TEXT = 'Hello irina{text}, your feed is empty.'
