@@ -53,7 +53,7 @@ class TestStartPage:
         # Verify error message
         self.log.info("Verifying error message")
         error_message = driver.find_element(by=By.XPATH, value=".//div[@class='alert alert-danger text-center']")
-        assert error_message.text == 'Invalid username / password', 'Text is not valid'
+        assert error_message.text == 'Invalid username / pasword', 'Text is not valid'
 
         # Close driver
         driver.close()
@@ -96,7 +96,7 @@ class TestStartPage:
         # Verify error message
         self.log.info("Verifying error message")
         error_message = driver.find_element(by=By.XPATH, value=".//div[@class='alert alert-danger text-center']")
-        assert error_message.text == 'Invalid username / password', 'Text is not valid'
+        assert error_message.text == 'Invalid username / pasword', 'Text is not valid'
 
         # Close driver
         driver.close()
