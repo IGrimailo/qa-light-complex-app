@@ -35,7 +35,7 @@ class StartPage(BasePage):
         """Verify success message after sing up"""
         success_message = self.driver.find_element(by=By.XPATH, value=self.constants.SUCCESS_MESSAGE_XPATH)
         assert success_message.text == self.constants.SUCCESS_MESSAGE_TEXT.format(
-            text=username.lower()), 'User is not registered'
+            username=username.lower()), 'User is not registered'
 
     def verify_error_message_sing_up(self):
         """Verify error message after sing up with existing email"""
