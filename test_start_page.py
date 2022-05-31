@@ -4,12 +4,11 @@ import time
 from time import sleep
 
 import pytest
-from selenium.webdriver.chrome import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.common.by import By
 
 from constants.base import BaseConstants
 from pages.start_page import StartPage
+from pages.utils import User
 
 
 class TestStartPage:
@@ -23,7 +22,11 @@ class TestStartPage:
         yield StartPage(driver)
         driver.close()
 
-    def test_invalid_login(self, start_page):
+    @pytest.fixture(scope="function")
+    def random_user(self):
+        return User()
+
+    def test_invalid_login(self, start_page, random_user):
         """
         - Pre-condition:
             - Create driver
@@ -39,7 +42,7 @@ class TestStartPage:
         # Fill field password
         # Click on 'Sing In' button
         self.log.info("Invalid user tried to signed in")
-        start_page.sign_in(username="Irina", password="123456789")
+        start_page.sign_in(username=random_user.username, password=random_user.password)
         sleep(2)
 
         # Verify error message
@@ -68,7 +71,7 @@ class TestStartPage:
         self.log.info("Verifying error message")
         start_page.verify_sign_in_error()
 
-    def test_success_registration(self, start_page):
+    def test_success_registration(self, start_page, random_user):
         """
         - Pre-condition:
             - Create driver
@@ -83,19 +86,15 @@ class TestStartPage:
 
         # Fill fields login, email, password
         # Click on 'Sing Un' button
-        user = f'Irina{self.current_datetime}'
-        email = f'test{self.current_datetime}@gmail.com'
-        password = f'password{self.current_datetime}'
-
         self.log.info('New user registration')
-        start_page.sign_up(username=user, email=email, password=password)
+        start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
         sleep(2)
 
         # Verify success registration
         self.log.info('Verifying success registration')
-        start_page.verify_success_sign_up(user)
+        start_page.verify_success_sign_up(username=random_user.username)
 
-    def test_user_already_exists(self, start_page):
+    def test_user_already_exists(self, start_page, random_user):
         """
         - Pre-condition:
             - Create driver
@@ -110,19 +109,15 @@ class TestStartPage:
 
         # Fill fields login, email, password
         # Click on 'Sing Un' button
-        user = f'Irina{self.current_datetime}'
-        email = f'test{self.current_datetime}@gmail.com'
-        password = f'password{self.current_datetime}'
-
         self.log.info('Registering a user with an existing email')
-        start_page.sign_up(username=user, email=email, password=password)
+        start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
         sleep(2)
 
         # Verify success registration
         self.log.info('Verifying error message')
         start_page.verify_error_message_sing_up()
 
-    def test_invalid_email(self, start_page):
+    def test_invalid_email(self, start_page, random_user):
         """
         - Pre-condition:
             - Create driver
@@ -137,12 +132,10 @@ class TestStartPage:
 
         # Fill fields login, email, password
         # Click on 'Sing Un' button
-        user = f'Irina{self.current_datetime}'
         email = f'test{self.current_datetime}'
-        password = f'password{self.current_datetime}'
 
         self.log.info('Registering a user with an invalid email')
-        start_page.sign_up(username=user, email=email, password=password)
+        start_page.sign_up(username=random_user.username, email=email, password=random_user.password)
         sleep(2)
 
         # Verify success registration
