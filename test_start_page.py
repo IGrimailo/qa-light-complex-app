@@ -2,287 +2,169 @@ import logging
 import time
 
 from time import sleep
+
+import pytest
 from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.common.by import By
+
+from constants.base import BaseConstants
+from pages.start_page import StartPage
+from pages.utils import User
 
 
 class TestStartPage:
     log = logging.getLogger('[StartPage]')
     current_datetime = int(time.time())
 
-    def test_invalid_login(self):
-        """
-        - Create driver
-        - Open start page
-        - Fill field login
-        - Fill field password
-        - Click on 'Sing In' button
-        - Verify error message
-        """
-        # Create driver
-        driver = WebDriver(executable_path='/Users/grimaylo/PycharmProjects/qa-light-complex-app/chromedriver')
+    @pytest.fixture(scope="function")
+    def start_page(self):
+        driver = WebDriver(executable_path=BaseConstants.DRIVER_PATH)
+        driver.get(BaseConstants.BASE_URL)
+        yield StartPage(driver)
+        driver.close()
 
-        # Open start page
-        self.log.info("Opening start page")
-        driver.get('https://qa-complex-app-for-testing.herokuapp.com/')
+    @pytest.fixture(scope="function")
+    def random_user(self):
+        return User()
+
+    @pytest.fixture(scope="function")
+    def registered_user(self, start_page, random_user):
+        start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
+        sleep(2)
+        start_page.logout()
+        return random_user
+
+    def test_invalid_login(self, start_page, random_user):
+        """
+        - Pre-condition:
+            - Create driver
+            - Open start page
+        - Steps:
+            - Fill field login
+            - Fill field password
+            - Click on 'Sing In' button
+            - Verify error message
+        """
 
         # Fill field login
-        self.log.info("Filling login field")
-        # - Find element
-        login_field = driver.find_element(by=By.XPATH, value='.//input[@placeholder="Username"]')
-        # - Clear field
-        login_field.clear()
-        # - Fill field
-        login_field.send_keys("Irina")
-
         # Fill field password
-        self.log.info("Filling password field")
-        # - Find element
-        password_field = driver.find_element(by=By.XPATH, value='.//input[@placeholder="Password"]')
-        # - Clear field
-        password_field.clear()
-        # - Fill field
-        password_field.send_keys("123456789")
-
-        # Click on 'Sign In' button
-        self.log.info("Going to click 'Sign In' button")
-        sing_in_button = driver.find_element(by=By.XPATH, value='.//button[text()="Sign In"]')
-        sing_in_button.click()
+        # Click on 'Sing In' button
+        self.log.info("Invalid user tried to signed in")
+        start_page.sign_in(username=random_user.username, password=random_user.password)
         sleep(2)
 
         # Verify error message
         self.log.info("Verifying error message")
-        error_message = driver.find_element(by=By.XPATH, value=".//div[@class='alert alert-danger text-center']")
-        assert error_message.text == 'Invalid username / password', 'Text is not valid'
+        start_page.verify_sign_in_error()
 
-        # Close driver
-        driver.close()
-
-    def test_empty_fields(self):
+    def test_empty_fields(self, start_page):
         """
-        - Create driver
-        - Open start page
-        - Clear field login
-        - Clear field password
-        - Click on 'Sing In' button
-        - Verify error message
+        - Pre-condition:
+            - Create driver
+            - Open start page
+        - Steps:
+            - Clear field login
+            - Clear field password
+            - Click on 'Sing In' button
+            - Verify error message
         """
-        # Create driver
-        driver = WebDriver(executable_path='/Users/grimaylo/PycharmProjects/qa-light-complex-app/chromedriver')
 
-        # Open start page
-        self.log.info("Opening start page")
-        driver.get('https://qa-complex-app-for-testing.herokuapp.com/')
-
-        # Fill field login
-        self.log.info("Clearing login field")
-        # - Find element
-        login_field = driver.find_element(by=By.XPATH, value='.//input[@placeholder="Username"]')
-        # - Clear field
-        login_field.clear()
-
-        # Fill field password
-        self.log.info("Clearing password field")
-        # - Find element
-        password_field = driver.find_element(by=By.XPATH, value='.//input[@placeholder="Password"]')
-        # - Clear field
-        password_field.clear()
-
-        # Click on 'Sign In' button
-        self.log.info("Going to click 'Sign In' button")
-        sing_in_button = driver.find_element(by=By.XPATH, value='.//button[text()="Sign In"]')
-        sing_in_button.click()
+        # Clear field login
+        # Clear field password
+        # Click on 'Sing In' button
+        self.log.info("Empty user tried to signed in")
+        start_page.sign_in()
 
         # Verify error message
         self.log.info("Verifying error message")
-        error_message = driver.find_element(by=By.XPATH, value=".//div[@class='alert alert-danger text-center']")
-        assert error_message.text == 'Invalid username / password', 'Text is not valid'
+        start_page.verify_sign_in_error()
 
-        # Close driver
-        driver.close()
-
-    def test_success_registration(self):
+    def test_success_registration(self, start_page, random_user):
         """
-        - Create driver
-        - Open start page
-        - Fill field user name
-        - Fill field email
-        - Fill field password
-        - Click on 'Sing up' button
-        - Verify success registration
+        - Pre-condition:
+            - Create driver
+            - Open start page
+        - Steps:
+            - Fill field user name
+            - Fill field email
+            - Fill field password
+            - Click on 'Sing up' button
+            - Verify success registration
         """
 
-        # Create driver
-        driver = WebDriver(executable_path='/Users/grimaylo/PycharmProjects/qa-light-complex-app/chromedriver')
-
-        # Open start page
-        self.log.info("Opening start page")
-        driver.get('https://qa-complex-app-for-testing.herokuapp.com/')
-
-        # Fill field user name
-        self.log.info("Filling user name field")
-        # - Find element
-        username_field = driver.find_element(by=By.ID, value='username-register')
-        # - Clear field
-        username_field.clear()
-        # - Fill field
-        username_field.send_keys(f'Irina{self.current_datetime}')
-        sleep(1)
-
-        # Fill field email
-        self.log.info("Filling email field")
-        # - Find element
-        login_field = driver.find_element(by=By.ID, value='email-register')
-        # - Clear field
-        login_field.clear()
-        # - Fill field
-        login_field.send_keys(f'test{self.current_datetime}@gmail.com')
-        sleep(1)
-
-        # Fill field password
-        self.log.info("Filling password field")
-        # - Find element
-        password_field = driver.find_element(by=By.ID, value='password-register')
-        # - Clear field
-        password_field.clear()
-        # - Fill field
-        password_field.send_keys(f'password{self.current_datetime}')
-        sleep(1)
-
-        # Click on 'Sign up' button
-        self.log.info("Going to click 'Sign up for OurApp' button")
-        sing_up_button = driver.find_element(by=By.XPATH, value='//*[@id="registration-form"]/button')
-        sing_up_button.click()
+        # Fill fields login, email, password
+        # Click on 'Sing Un' button
+        self.log.info('New user registration')
+        start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
         sleep(2)
 
         # Verify success registration
-        self.log.info("Verifying success registration")
-        success_message = driver.find_element(by=By.XPATH, value='/html/body/div[2]/div/h2')
-        assert success_message.text == f'Hello irina{self.current_datetime}, your feed is empty.', 'User is not registered'
+        self.log.info('Verifying success registration')
+        start_page.verify_success_sign_up(username=random_user.username)
 
-        # Close driver
-        driver.close()
-
-    def test_user_already_exists(self):
+    def test_user_already_exists(self, start_page, registered_user, random_user):
         """
-        - Create driver
-        - Open start page
-        - Fill field user name
-        - Fill field email
-        - Fill field password
-        - Click on 'Sing up' button
-        - Verify error message
+        - Pre-condition:
+            - Create driver
+            - Open start page
+            - Sign up as a user
+            - Logout
+        - Steps:
+            - Fill field username as a user
+            - Fill field email as the email
+            - Fill field password as a password
+            - Click on 'Sing up' button
+            - Verify error message
         """
 
-        # Create driver
-        driver = WebDriver(executable_path='/Users/grimaylo/PycharmProjects/qa-light-complex-app/chromedriver')
-
-        # Open start page
-        self.log.info("Opening start page")
-        driver.get('https://qa-complex-app-for-testing.herokuapp.com/')
-
-        # Fill field user name
-        self.log.info("Filling user name field")
-        # - Find element
-        username_field = driver.find_element(by=By.ID, value='username-register')
-        # - Clear field
-        username_field.clear()
-        # - Fill field
-        username_field.send_keys(f'Irina{self.current_datetime}')
-        sleep(1)
-
-        # Fill field email
-        self.log.info("Filling email field")
-        # - Find element
-        login_field = driver.find_element(by=By.ID, value='email-register')
-        # - Clear field
-        login_field.clear()
-        # - Fill field
-        login_field.send_keys(f'test{self.current_datetime}@gmail.com')
-        sleep(1)
-
-        # Fill field password
-        self.log.info("Filling password field")
-        # - Find element
-        password_field = driver.find_element(by=By.ID, value='password-register')
-        # - Clear field
-        password_field.clear()
-        # - Fill field
-        password_field.send_keys(f'password{self.current_datetime}')
-        sleep(1)
-
-        # Click on 'Sign up' button
-        self.log.info("Going to click 'Sign up for OurApp' button")
-        sing_up_button = driver.find_element(by=By.XPATH, value='//*[@id="registration-form"]/button')
-        sing_up_button.click()
+        # Fill fields login, email, password
+        # Click on 'Sing Un' button
+        self.log.info('Registering a user with an existing email')
+        start_page.sign_up(username=random_user.username, email=registered_user.email, password=random_user.password)
         sleep(2)
 
-        # Verify error message
-        self.log.info("Verifying error message")
-        error_message = driver.find_element(by=By.XPATH, value='//*[@id="registration-form"]/div[2]/div')
-        assert error_message.text == 'That email is already being used.', 'User is registered'
+        # Verify success registration
+        self.log.info('Verifying error message')
+        start_page.verify_error_message_sing_up()
 
-        # Close driver
-        driver.close()
-
-    def test_invalid_email(self):
+    def test_invalid_email(self, start_page, random_user):
         """
-        - Create driver
-        - Open start page
-        - Fill field user name
-        - Fill field email
-        - Fill field password
-        - Click on 'Sing up' button
-        - Verify error message
+        - Pre-condition:
+            - Create driver
+            - Open start page
+        - Steps:
+            - Fill field user name
+            - Fill field email
+            - Fill field password
+            - Click on 'Sing up' button
+            - Verify error message
         """
 
-        # Create driver
-        driver = WebDriver(executable_path='/Users/grimaylo/PycharmProjects/qa-light-complex-app/chromedriver')
+        # Fill fields login, email, password
+        # Click on 'Sing Un' button
+        email = f'test{self.current_datetime}'
 
-        # Open start page
-        self.log.info("Opening start page")
-        driver.get('https://qa-complex-app-for-testing.herokuapp.com/')
-
-        # Fill field user name
-        self.log.info("Filling user name field")
-        # - Find element
-        username_field = driver.find_element(by=By.ID, value='username-register')
-        # - Clear field
-        username_field.clear()
-        # - Fill field
-        username_field.send_keys(f'Irina{self.current_datetime}')
-        sleep(1)
-
-        # Fill field email
-        self.log.info("Filling email field")
-        # - Find element
-        login_field = driver.find_element(by=By.ID, value='email-register')
-        # - Clear field
-        login_field.clear()
-        # - Fill field
-        login_field.send_keys(f'test{self.current_datetime}')
-        sleep(1)
-
-        # Fill field password
-        self.log.info("Filling password field")
-        # - Find element
-        password_field = driver.find_element(by=By.ID, value='password-register')
-        # - Clear field
-        password_field.clear()
-        # - Fill field
-        password_field.send_keys(f'password{self.current_datetime}')
-        sleep(1)
-
-        # Click on 'Sign up' button
-        self.log.info("Going to click 'Sign up for OurApp' button")
-        sing_up_button = driver.find_element(by=By.XPATH, value='//*[@id="registration-form"]/button')
-        sing_up_button.click()
+        self.log.info('Registering a user with an invalid email')
+        start_page.sign_up(username=random_user.username, email=email, password=random_user.password)
         sleep(2)
 
-        # Verify error message
-        self.log.info("Verifying error message")
-        error_message = driver.find_element(by=By.XPATH, value='//*[@id="registration-form"]/div[2]/div')
-        assert error_message.text == 'You must provide a valid email address.', 'User is registered'
+        # Verify success registration
+        self.log.info('Verifying error message')
+        start_page.verify_error_message_sing_up()
 
-        # Close driver
-        driver.close()
+    def test_sign_in(self, start_page, registered_user):
+        """
+        - Pre-condition:
+            - Sign up as a user
+            - Logout
+        - Steps:
+            - Sign in as the user
+            - Verify success sign in
+        """
+
+        # Sign in as the user
+        self.log.info('Sign in as the user')
+        start_page.sign_in(username=registered_user.username, password=registered_user.password)
+
+        # Verify success sign in
+        self.log.info('Verify success sign in')
+        start_page.verify_success_sign_up(username=registered_user.username)
