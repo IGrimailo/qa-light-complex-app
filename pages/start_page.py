@@ -41,3 +41,8 @@ class StartPage(BasePage):
         """Verify error message after sing up with existing email"""
         error_message = self.driver.find_element(by=By.XPATH, value=self.constants.SING_UP_EMAIL_ERROR_MESSAGE_XPATH)
         assert error_message.text in self.constants.SING_UP_EMAIL_ERROR_MESSAGE_TEXT, 'User is registered'
+
+    # FixMe
+    def logout(self):
+        """Sing out user"""
+        self.click(xpath=self.constants.SING_OUT_BUTTON_XPATH)

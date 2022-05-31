@@ -14,6 +14,7 @@ class StartPageConstants:
     SING_UP_EMAIL_ERROR_MESSAGE_XPATH = '//*[@id="registration-form"]/div[2]/div'
     SING_UP_EMAIL_ERROR_MESSAGE_TEXT = ['That email is already being used.', 'You must provide a valid email address.']
 
-    # Profile page
+    # FixMe: Profile page
     SUCCESS_MESSAGE_XPATH = '/html/body/div[2]/div/h2'
     SUCCESS_MESSAGE_TEXT = 'Hello {username}, your feed is empty.'
+    SING_OUT_BUTTON_XPATH = './/button[text()="Sign Out"]'

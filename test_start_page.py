@@ -26,6 +26,13 @@ class TestStartPage:
     def random_user(self):
         return User()
 
+    @pytest.fixture(scope="function")
+    def registered_user(self, start_page, random_user):
+        start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
+        sleep(2)
+        start_page.logout()
+        return random_user
+
     def test_invalid_login(self, start_page, random_user):
         """
         - Pre-condition:
@@ -94,15 +101,17 @@ class TestStartPage:
         self.log.info('Verifying success registration')
         start_page.verify_success_sign_up(username=random_user.username)
 
-    def test_user_already_exists(self, start_page, random_user):
+    def test_user_already_exists(self, start_page, registered_user, random_user):
         """
         - Pre-condition:
             - Create driver
             - Open start page
+            - Sign up as a user
+            - Logout
         - Steps:
-            - Fill field user name
-            - Fill field email
-            - Fill field password
+            - Fill field username as a user
+            - Fill field email as the email
+            - Fill field password as a password
             - Click on 'Sing up' button
             - Verify error message
         """
@@ -110,7 +119,7 @@ class TestStartPage:
         # Fill fields login, email, password
         # Click on 'Sing Un' button
         self.log.info('Registering a user with an existing email')
-        start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
+        start_page.sign_up(username=random_user.username, email=registered_user.email, password=random_user.password)
         sleep(2)
 
         # Verify success registration
@@ -141,3 +150,21 @@ class TestStartPage:
         # Verify success registration
         self.log.info('Verifying error message')
         start_page.verify_error_message_sing_up()
+
+    def test_sign_in(self, start_page, registered_user):
+        """
+        - Pre-condition:
+            - Sign up as a user
+            - Logout
+        - Steps:
+            - Sign in as the user
+            - Verify success sign in
+        """
+
+        # Sign in as the user
+        self.log.info('Sign in as the user')
+        start_page.sign_in(username=registered_user.username, password=registered_user.password)
+
+        # Verify success sign in
+        self.log.info('Verify success sign in')
+        start_page.verify_success_sign_up(username=registered_user.username)
