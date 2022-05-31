@@ -10,7 +10,6 @@ from pages.utils import User
 
 
 class TestStartPage:
-    log = logging.getLogger('[StartPage]')
     current_datetime = int(time.time())
 
     @pytest.fixture(scope="function")
@@ -28,8 +27,8 @@ class TestStartPage:
     @pytest.fixture(scope="function")
     def registered_user(self, start_page, random_user):
         start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
-        start_page.click_sign_up_and_verify()
-        start_page.logout()
+        hello_user_page = start_page.click_sign_up_and_verify()
+        hello_user_page.header.logout()
         return random_user
 
     def test_invalid_login(self, start_page, random_user):
@@ -88,10 +87,10 @@ class TestStartPage:
         # Fill fields login, email, password
         # Click on 'Sing Un' button
         start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
-        start_page.click_sign_up_and_verify()
+        hello_user_page = start_page.click_sign_up_and_verify()
 
         # Verify success registration
-        start_page.verify_success_sign_up(username=random_user.username)
+        hello_user_page.verify_success_sign_up(username=random_user.username)
 
     def test_user_already_exists(self, start_page, registered_user, random_user):
         """
@@ -148,7 +147,7 @@ class TestStartPage:
         """
 
         # Sign in as the user
-        start_page.sign_in(username=registered_user.username, password=registered_user.password)
+        hello_user_page = start_page.sign_in(username=registered_user.username, password=registered_user.password)
 
         # Verify success sign in
-        start_page.verify_success_sign_up(username=registered_user.username)
+        hello_user_page.verify_success_sign_up(username=registered_user.username)

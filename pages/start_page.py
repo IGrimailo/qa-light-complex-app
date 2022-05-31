@@ -1,9 +1,6 @@
-from time import sleep
-
-from selenium.webdriver.common.by import By
-
 from constants.start_page import StartPageConstants
 from pages.base_page import BasePage
+from pages.hello_user_page import HelloUserPage
 from pages.utils import log_wrapper, wait_until_ok
 
 
@@ -19,6 +16,7 @@ class StartPage(BasePage):
         self.fill_field(xpath=self.constants.SING_IN_USERNAME_XPATH, value=username)
         self.fill_field(xpath=self.constants.SING_IN_PASSWORD_XPATH, value=password)
         self.click(xpath=self.constants.SING_IN_BUTTON_XPATH)
+        return HelloUserPage(self.driver)
 
     @log_wrapper
     def verify_sign_in_error(self):
@@ -40,13 +38,7 @@ class StartPage(BasePage):
         """Click sign up and verify that button doesn't exists anymore"""
         self.click(xpath=self.constants.SING_UP_BUTTON_XPATH)
         assert not self.is_element_exists(xpath=self.constants.SING_UP_BUTTON_XPATH)
-
-    @log_wrapper
-    def verify_success_sign_up(self, username):
-        """Verify success message after sing up"""
-        success_message = self.wait_until_displayed(xpath=self.constants.SUCCESS_MESSAGE_XPATH)
-        assert success_message.text == self.constants.SUCCESS_MESSAGE_TEXT.format(
-            username=username.lower()), 'User is not registered'
+        return HelloUserPage(self.driver)
 
     @log_wrapper
     def verify_error_message_sing_up(self):
@@ -54,8 +46,3 @@ class StartPage(BasePage):
         error_message = self.wait_until_displayed(xpath=self.constants.SING_UP_EMAIL_ERROR_MESSAGE_XPATH)
         assert error_message.text in self.constants.SING_UP_EMAIL_ERROR_MESSAGE_TEXT, 'User is registered'
 
-    # FixMe
-    @log_wrapper
-    def logout(self):
-        """Sing out user"""
-        self.click(xpath=self.constants.SING_OUT_BUTTON_XPATH)
