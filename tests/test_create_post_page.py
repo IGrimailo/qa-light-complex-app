@@ -3,27 +3,16 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 from constants.base import BaseConstants
 from pages.start_page import StartPage
-from pages.utils import User
+from pages.utils import User, create_driver, random_text
 
 
-class TestCreatePostPage:
+@pytest.mark.parametrize("browser", BaseConstants.BROWSER_LIST_UNDER_TEST)
+class TestStartPage:
     @pytest.fixture(scope="function")
-    def start_page(self):
-        driver = WebDriver(executable_path=BaseConstants.DRIVER_PATH)
-        driver.implicitly_wait(1)
-        driver.get(BaseConstants.BASE_URL)
+    def start_page(self, browser):
+        driver = create_driver(browser=browser)
         yield StartPage(driver)
         driver.close()
-
-    @pytest.fixture(scope="function")
-    def random_user(self):
-        return User()
-
-    @pytest.fixture(scope="function")
-    def signed_in_user(self, start_page, random_user):
-        start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
-        hello_user_page = start_page.click_sign_up_and_verify()
-        return hello_user_page, random_user
 
     def test_create_post(self, signed_in_user):
         """
@@ -33,11 +22,27 @@ class TestCreatePostPage:
             - Create post
             - Verify result
         """
-        hello_user_page, user = signed_in_user
+        hello_user_page = signed_in_user
         post_create_page = hello_user_page.header.navigate_to_create_post()
 
         # Create a new post
-        post_create_page.create_post(title="Test new post", content="Test new content")
+        post_create_page.create_post(title=random_text(2), content=random_text(30))
 
         # Verify result
         post_create_page.verify_message()
+
+    # def test_update_post(self):
+    #     """
+    #     - Pre-conditions:
+    #         - SingUp as a user
+    #         - Create post
+    #     - Steps:
+    #         - Navigate to profile page
+    #         - Find post (click it)
+    #         - Click edit
+    #         - Update title & content
+    #         - Verify success message
+    #         - Navigate to profile page
+    #         - Find post (click on it)
+    #         - Verify post
+    #     """

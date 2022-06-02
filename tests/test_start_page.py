@@ -6,30 +6,18 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 from constants.base import BaseConstants
 from pages.start_page import StartPage
-from pages.utils import User
+from pages.utils import User, create_driver
 
 
+@pytest.mark.parametrize("browser", BaseConstants.BROWSER_LIST_UNDER_TEST)
 class TestStartPage:
     current_datetime = int(time.time())
 
     @pytest.fixture(scope="function")
-    def start_page(self):
-        driver = WebDriver(executable_path=BaseConstants.DRIVER_PATH)
-        driver.implicitly_wait(1)
-        driver.get(BaseConstants.BASE_URL)
+    def start_page(self, browser):
+        driver = create_driver(browser=browser)
         yield StartPage(driver)
         driver.close()
-
-    @pytest.fixture(scope="function")
-    def random_user(self):
-        return User()
-
-    @pytest.fixture(scope="function")
-    def registered_user(self, start_page, random_user):
-        start_page.sign_up(username=random_user.username, email=random_user.email, password=random_user.password)
-        hello_user_page = start_page.click_sign_up_and_verify()
-        hello_user_page.header.logout()
-        return random_user
 
     def test_invalid_login(self, start_page, random_user):
         """
@@ -46,7 +34,7 @@ class TestStartPage:
         # Fill field login
         # Fill field password
         # Click on 'Sing In' button
-        start_page.sign_in(username=random_user.username, password=random_user.password)
+        start_page.sign_in(random_user)
 
         # Verify error message
         start_page.verify_sign_in_error()
@@ -66,7 +54,7 @@ class TestStartPage:
         # Clear field login
         # Clear field password
         # Click on 'Sing In' button
-        start_page.sign_in()
+        start_page.sign_in(User())
 
         # Verify error message
         start_page.verify_sign_in_error()
@@ -147,7 +135,7 @@ class TestStartPage:
         """
 
         # Sign in as the user
-        hello_user_page = start_page.sign_in(username=registered_user.username, password=registered_user.password)
+        hello_user_page = start_page.sign_in(registered_user)
 
         # Verify success sign in
         hello_user_page.verify_success_sign_up(username=registered_user.username)
