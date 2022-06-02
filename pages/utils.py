@@ -1,7 +1,14 @@
 import datetime
 import logging
 import time
+import random
 from time import sleep
+
+from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
+from selenium.webdriver.firefox.webdriver import WebDriver as MozilaDriver
+
+from constants.base import BaseConstants
+from constants.text_for_post import EN_TEXT
 
 
 def wait_until_ok(timeout=5, period=0.25):
@@ -41,8 +48,33 @@ def log_wrapper(func):
 class User:
 
     def __init__(self, username="", email="", password=""):
-        current_datetime = int(time.time())
+        self.username = username
+        self.email = email
+        self.password = password
+        self.posts = []
 
-        self.username = username if username else f'Irina{current_datetime}'
-        self.email = email if email else f'test{current_datetime}@gmail.com'
-        self.password = password if password else f'password{current_datetime}'
+    def fill_properties(self):
+        """Create a random user"""
+        current_datetime = int(time.time())
+        self.username = f'Irina{current_datetime}'
+        self.email = f'test{current_datetime}@gmail.com'
+        self.password = f'password{current_datetime}'
+
+
+def create_driver(browser):
+    """Create driver according to provided browser"""
+    if browser == BaseConstants.CHROME:
+        driver = ChromeDriver(executable_path=BaseConstants.CHROME_DRIVER_PATH)
+    elif browser == BaseConstants.FIREFOX:
+        driver = MozilaDriver(executable_path=BaseConstants.FIREFOX_DRIVER_PATH)
+    else:
+        raise ValueError(f"Unknown browser name: {browser}")
+    driver.implicitly_wait(1)
+    driver.get(BaseConstants.BASE_URL)
+    return driver
+
+
+def random_text(length=15, preset=EN_TEXT):
+    """Create text for post"""
+    words = preset.split(" ")
+    return ' '.join(random.choice(words) for _ in range(length))

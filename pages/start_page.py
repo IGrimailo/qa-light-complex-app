@@ -11,10 +11,10 @@ class StartPage(BasePage):
         self.constants = StartPageConstants()
 
     @log_wrapper
-    def sign_in(self, username="", password=""):
+    def sign_in(self, user):
         """Sing in using provided values"""
-        self.fill_field(xpath=self.constants.SING_IN_USERNAME_XPATH, value=username)
-        self.fill_field(xpath=self.constants.SING_IN_PASSWORD_XPATH, value=password)
+        self.fill_field(xpath=self.constants.SING_IN_USERNAME_XPATH, value=user.username)
+        self.fill_field(xpath=self.constants.SING_IN_PASSWORD_XPATH, value=user.password)
         self.click(xpath=self.constants.SING_IN_BUTTON_XPATH)
         return HelloUserPage(self.driver)
 
