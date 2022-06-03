@@ -4,6 +4,7 @@ import time
 import random
 from time import sleep
 
+from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
 from selenium.webdriver.firefox.webdriver import WebDriver as MozilaDriver
 
@@ -64,9 +65,13 @@ class User:
 def create_driver(browser):
     """Create driver according to provided browser"""
     if browser == BaseConstants.CHROME:
-        driver = ChromeDriver(executable_path=BaseConstants.CHROME_DRIVER_PATH)
+        options = webdriver.ChromeOptions()
+        options.add_argument("headless")
+        driver = ChromeDriver(options=options)
     elif browser == BaseConstants.FIREFOX:
-        driver = MozilaDriver(executable_path=BaseConstants.FIREFOX_DRIVER_PATH)
+        options = webdriver.FirefoxOptions()
+        options.add_argument("--headless")
+        driver = MozilaDriver(options=options)
     else:
         raise ValueError(f"Unknown browser name: {browser}")
     driver.implicitly_wait(1)
