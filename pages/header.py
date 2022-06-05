@@ -24,7 +24,7 @@ class Header(BasePage):
         return CreatePostPage(self.driver)
 
     @log_wrapper
-    def navigate_to_post_by_title(self, title):
+    def navigate_to_post_by_title(self, title: str):
         """Open to the post"""
         self.click(self.constants.SEARCH_ICON_XPATH)
         self.fill_field(self.constants.SEARCH_INPUT_FIELD_XPATH, title)
@@ -33,7 +33,7 @@ class Header(BasePage):
         return PostPage(self.driver)
 
     @log_wrapper
-    def navigate_to_profile(self, username):
+    def navigate_to_profile(self, username: str):
         """Open user profile"""
         self.click(self.constants.MY_PROFILE_BUTTON_XPATH.format(username=username.lower()))
         from pages.user_profile_page import UserProfilePage

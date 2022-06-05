@@ -14,35 +14,38 @@ class TestStartPage:
         yield StartPage(driver)
         driver.close()
 
-    def test_create_post(self, signed_in_user):
+    # def test_create_post(self, signed_in_user):
+    #     """
+    #     - Pre-conditions:
+    #         - Sing In/Up as a user
+    #     - Steps:
+    #         - Create post
+    #         - Verify result
+    #     """
+    #     hello_user_page = signed_in_user
+    #     post_create_page = hello_user_page.header.navigate_to_create_post()
+    #
+    #     # Create a new post
+    #     post_create_page.create_post(title=random_text(2), content=random_text(30))
+    #
+    #     # Verify result
+    #     post_create_page.verify_message()
+
+    def test_create_private_post(self, signed_in_user):
         """
         - Pre-conditions:
-            - Sing In/Up as a user
-        - Steps:
+            - SingUp as a user
             - Create post
+        - Steps:
+            - Create private post
             - Verify result
         """
+
         hello_user_page = signed_in_user
         post_create_page = hello_user_page.header.navigate_to_create_post()
 
         # Create a new post
-        post_create_page.create_post(title=random_text(2), content=random_text(30))
+        post_create_page.create_private_post(title=random_text(2), content=random_text(30))
 
         # Verify result
-        post_create_page.verify_message()
-
-    # def test_update_post(self):
-    #     """
-    #     - Pre-conditions:
-    #         - SingUp as a user
-    #         - Create post
-    #     - Steps:
-    #         - Navigate to profile page
-    #         - Find post (click it)
-    #         - Click edit
-    #         - Update title & content
-    #         - Verify success message
-    #         - Navigate to profile page
-    #         - Find post (click on it)
-    #         - Verify post
-    #     """
+        post_create_page.verify_availability_message()

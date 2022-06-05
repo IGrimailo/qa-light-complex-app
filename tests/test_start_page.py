@@ -19,7 +19,7 @@ class TestStartPage:
         yield StartPage(driver)
         driver.close()
 
-    def test_invalid_login(self, start_page, random_user):
+    def test_invalid_login(self, start_page: StartPage, random_user: User):
         """
         - Pre-condition:
             - Create driver
@@ -39,7 +39,7 @@ class TestStartPage:
         # Verify error message
         start_page.verify_sign_in_error()
 
-    def test_empty_fields(self, start_page):
+    def test_empty_fields(self, start_page: StartPage):
         """
         - Pre-condition:
             - Create driver
@@ -59,7 +59,7 @@ class TestStartPage:
         # Verify error message
         start_page.verify_sign_in_error()
 
-    def test_success_registration(self, start_page, random_user):
+    def test_success_registration(self, start_page: StartPage, random_user: User):
         """
         - Pre-condition:
             - Create driver
@@ -80,7 +80,7 @@ class TestStartPage:
         # Verify success registration
         hello_user_page.verify_success_sign_up(username=random_user.username)
 
-    def test_user_already_exists(self, start_page, registered_user, random_user):
+    def test_user_already_exists(self, start_page: StartPage, registered_user: User, random_user: User):
         """
         - Pre-condition:
             - Create driver
@@ -102,7 +102,7 @@ class TestStartPage:
         # Verify success registration
         start_page.verify_error_message_sing_up()
 
-    def test_invalid_email(self, start_page, random_user):
+    def test_invalid_email(self, start_page: StartPage, random_user: User):
         """
         - Pre-condition:
             - Create driver
@@ -124,7 +124,7 @@ class TestStartPage:
         # Verify success registration
         start_page.verify_error_message_sing_up()
 
-    def test_sign_in(self, start_page, registered_user):
+    def test_sign_in(self, start_page: StartPage, registered_user: User):
         """
         - Pre-condition:
             - Sign up as a user
