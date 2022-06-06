@@ -38,3 +38,8 @@ class Header(BasePage):
         self.click(self.constants.MY_PROFILE_BUTTON_XPATH.format(username=username.lower()))
         from pages.user_profile_page import UserProfilePage
         return UserProfilePage(self.driver)
+
+    @log_wrapper
+    def open_chat(self):
+        """Open chat"""
+        self.click(self.constants.CHAT_BUTTON_XPATH)

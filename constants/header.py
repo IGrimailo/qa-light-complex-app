@@ -5,3 +5,4 @@ class HeaderConstants:
     SEARCH_INPUT_FIELD_XPATH = './/input[@id="live-search-field"]'
     SEARCH_RESULT_XPATH = './/strong[text()="{title}"]'
     MY_PROFILE_BUTTON_XPATH = './/a[@href="/profile/{username}"]'
+    CHAT_BUTTON_XPATH = ".//*[@data-icon='comment']"

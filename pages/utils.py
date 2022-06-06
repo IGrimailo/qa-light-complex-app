@@ -5,6 +5,7 @@ import random
 from time import sleep
 
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
 from selenium.webdriver.firefox.webdriver import WebDriver as MozilaDriver
 
@@ -46,6 +47,20 @@ def log_wrapper(func):
     return wrapper
 
 
+def time_out_wrapper(func):
+    """Handle TimeoutException"""
+
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+        except TimeoutException:
+            element_xpath = kwargs["xpath"] if kwargs.get("xpath") else args[1]
+            raise TimeoutException(f"Cannot find element '{element_xpath}'")
+        return result
+
+    return wrapper
+
+
 class User:
 
     def __init__(self, username="", email="", password=""):
@@ -82,4 +97,4 @@ def create_driver(browser):
 def random_text(length=15, preset=EN_TEXT):
     """Create text for post"""
     words = preset.split(" ")
-    return ' '.join(random.choice(words) for _ in range(length))
+    return " ".join(random.choice(words).replace("\n", "") for _ in range(length))
