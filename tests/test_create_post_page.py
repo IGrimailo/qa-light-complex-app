@@ -14,22 +14,22 @@ class TestStartPage:
         yield StartPage(driver)
         driver.close()
 
-    # def test_create_post(self, signed_in_user):
-    #     """
-    #     - Pre-conditions:
-    #         - Sing In/Up as a user
-    #     - Steps:
-    #         - Create post
-    #         - Verify result
-    #     """
-    #     hello_user_page = signed_in_user
-    #     post_create_page = hello_user_page.header.navigate_to_create_post()
-    #
-    #     # Create a new post
-    #     post_create_page.create_post(title=random_text(2), content=random_text(30))
-    #
-    #     # Verify result
-    #     post_create_page.verify_message()
+    def test_create_post(self, signed_in_user):
+        """
+        - Pre-conditions:
+            - Sing In/Up as a user
+        - Steps:
+            - Create post
+            - Verify result
+        """
+        hello_user_page = signed_in_user
+        post_create_page = hello_user_page.header.navigate_to_create_post()
+
+        # Create a new post
+        post_create_page.create_post(title=random_text(2), content=random_text(30))
+
+        # Verify result
+        post_create_page.verify_message()
 
     def test_create_private_post(self, signed_in_user):
         """
